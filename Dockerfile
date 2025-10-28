@@ -17,4 +17,4 @@ COPY . /code/
 # Hugging Face Spaces biasanya menggunakan port 7860
 EXPOSE 7860
 
-CMD ["python", "-c", "print('--- Python is running inside container! ---')"]
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
