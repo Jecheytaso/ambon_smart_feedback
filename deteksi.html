@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Deteksi Instansi - Ambon Smart Feedback</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header-centered-text">
+  <img src="image/Logo-Fakultas-TI-1.png" alt="Logo Untar" class="logo-kiri">
+  <h1 class="judul-ditengah">Ambon Smart Feedback</h1>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="deteksi.html">Deteksi</a>
+  <a href="about.html">Tentang</a>
+  <a href="bantuan.html">Bantuan</a>
+</nav>
+
+<section class="container">
+  <h2>Deteksi Instansi</h2>
+  <p>Masukkan teks di bawah ini:</p>
+  <textarea id="inputTeks" placeholder="Contoh: Buat katong tampa sampah pak wali..."></textarea>
+  <button id="btnDeteksi">Deteksi</button>
+
+  <div id="hasilDeteksi" class="output-box" style="display:none;">
+    <strong>Hasil Klasifikasi:</strong>
+    <p id="outputKelas"></p>
+  </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
