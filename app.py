@@ -1,118 +1,119 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
-import torch
+# Tambahkan ini DI AWAL SANGAT ATAS
+print("--- app.py execution started ---")
 
-# === 1. Inisialisasi Aplikasi FastAPI ===
-app = FastAPI()
+try:
+    # Import libraries satu per satu untuk isolasi error
+    print("Importing FastAPI...")
+    from fastapi import FastAPI
+    print("Importing BaseModel...")
+    from pydantic import BaseModel
+    print("Importing transformers...")
+    from transformers import AutoTokenizer, AutoModelForSequenceClassification
+    print("Importing torch...")
+    import torch
+    print("--- Imports successful ---")
 
-# === 2. Pemuatan Model (Global) ===
-# Model dimuat sekali saat aplikasi/Space dimulai.
-# Ini JAUH lebih efisien daripada memuatnya di setiap request.
+    # === 1. Inisialisasi Aplikasi FastAPI ===
+    print("Initializing FastAPI app...")
+    app = FastAPI()
+    print("FastAPI app initialized.")
 
-MODEL_NAME = "Jechey/best-indobert-model" 
+    # === 2. Pemuatan Model (Global) ===
+    MODEL_NAME = "Jechey/best-indobert-model"
+    print(f"Checking for CUDA availability...")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Using device: {device}")
 
-# Cek apakah GPU tersedia (jika Anda menggunakan GPU di Space)
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Attempting to load tokenizer from: {MODEL_NAME}")
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    print("--- Tokenizer loaded successfully ---")
 
-print(f"Memuat tokenizer dari: {MODEL_NAME}")
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    print(f"Attempting to load model from: {MODEL_NAME}")
+    # Muat model ke memori utama dulu sebelum dipindah ke device
+    model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)
+    print("--- Model loaded successfully (to default device/RAM) ---")
+    print(f"Moving model to device: {device}")
+    model.to(device)
+    print("--- Model moved to device successfully ---")
+    model.eval()
+    print("--- Model set to eval mode ---")
 
-print(f"Memuat model dari: {MODEL_NAME} ke {device}")
-model = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME).to(device)
-model.eval() # Set model ke mode evaluasi (penting untuk inferensi)
-print("Model dan tokenizer berhasil dimuat.")
+    # === 3. Mapping ID Label ke Nama Label ===
+    # Pastikan urutan ini sudah benar sesuai output label_encoder.classes_
+    label_map = [
+        "Dinas Kominfo",
+        "Dinas LHP",
+        "Dinas PUPR",
+        "Dinas Pendidikan",
+        "Dinas Perhubungan"
+    ]
+    print(f"Label map loaded: {label_map}")
 
+    # === 4. Pydantic Model untuk Input ===
+    class InputText(BaseModel):
+        text: str
+    print("InputText model defined.")
 
-# === 3. Mapping ID Label ke Nama Label ===
-# !!! INI BAGIAN PALING PENTING !!!
-# Model Anda mengeluarkan angka (misal: 0, 1, 2, 3, 4).
-# Kita perlu memetakannya kembali ke nama label (misal: "Dinas Kominfo").
-# Urutan di sini HARUS SAMA PERSIS dengan urutan saat Anda melatih LabelEncoder.
-#
-# Untuk menemukan urutan yang benar, buka notebook Colab Anda
-# dan jalankan:
-# print(label_encoder.classes_)
-#
-# Ganti daftar di bawah ini dengan output dari perintah tersebut.
-# (Saya hanya menebak urutannya berdasarkan fungsi dummy Anda)
+    # === 5. Fungsi Prediksi ===
+    def get_model_prediction(text_input: str) -> str:
+        print(f"get_model_prediction called with text: '{text_input[:50]}...'") # Log input pendek
+        try:
+            print("Tokenizing input...")
+            inputs = tokenizer(
+                text_input,
+                return_tensors="pt",
+                truncation=True,
+                padding=True,
+                max_length=128 # Sesuaikan jika berbeda saat training
+            )
+            print("Moving inputs to device...")
+            inputs = {k: v.to(device) for k, v in inputs.items()}
 
-label_map = [
-    "Dinas Kominfo",
-    "Dinas LHP",
-    "Dinas PUPR",
-    "Dinas Pendidikan",
-    "Dinas Perhubungan"
-]
-print(f"Label map berhasil dimuat: {label_map}")
+            print("Performing inference...")
+            with torch.no_grad():
+                outputs = model(**inputs)
+            logits = outputs.logits
+            print("Inference complete.")
 
+            predicted_class_id = logits.argmax(dim=-1).item()
+            print(f"Predicted class ID: {predicted_class_id}")
 
-# === 4. Pydantic Model untuk Input ===
-class InputText(BaseModel):
-    text: str
+            if 0 <= predicted_class_id < len(label_map):
+                result = label_map[predicted_class_id]
+                print(f"Mapped prediction: {result}")
+                return result
+            else:
+                print(f"Error: Predicted ID out of range: {predicted_class_id}")
+                return "Error: ID Prediksi Tidak Dikenal"
+        except Exception as e_inner:
+            print(f"!!! EXCEPTION in get_model_prediction: {e_inner}")
+            # Tambahkan traceback jika perlu detail lebih lanjut
+            import traceback
+            print(traceback.format_exc()) # Cetak detail error internal prediksi
+            return "Error: Proses prediksi gagal internal"
 
-# === 5. Fungsi Prediksi (Pengganti Dummy) ===
-def get_model_prediction(text_input: str) -> str:
-    """
-    Fungsi ini mengambil teks input mentah,
-    menjalankannya melalui model, dan mengembalikan prediksi label (string).
-    """
-    try:
-        # 1. Tokenisasi: Ubah teks menjadi angka
-        # return_tensors="pt" berarti kita ingin hasil berupa PyTorch Tensors
-        inputs = tokenizer(
-            text_input, 
-            return_tensors="pt", 
-            truncation=True, 
-            padding=True, 
-            max_length=128 # Sesuaikan max_length jika perlu
-        )
+    # === 6. FastAPI Endpoint ===
+    @app.get("/")
+    async def root():
+        print("Root endpoint '/' accessed.")
+        return {"message": "Server FastAPI berjalan. Gunakan endpoint /predict untuk klasifikasi."}
 
-        # 2. Pindahkan data token ke device (GPU/CPU)
-        inputs = {k: v.to(device) for k, v in inputs.items()}
+    @app.post("/predict")
+    async def predict(data: InputText):
+        print(f"Endpoint '/predict' accessed with text: '{data.text[:50]}...'") # Log input pendek
+        hasil_prediksi = get_model_prediction(data.text)
+        print(f"Returning prediction: {hasil_prediksi}")
+        return {"prediction": hasil_prediksi}
 
-        # 3. Jalankan Model
-        # torch.no_grad() memberitahu model untuk tidak menghitung gradien
-        # (ini menghemat memori dan mempercepat inferensi)
-        with torch.no_grad():
-            outputs = model(**inputs)
+    print("--- Endpoint definitions complete ---")
+    print("--- app.py setup seems complete. Uvicorn should take over now. ---")
 
-        # 4. Dapatkan Logits (skor mentah dari model)
-        logits = outputs.logits
+except Exception as e_outer:
+    # Tangkap error yang terjadi DI LUAR fungsi/endpoint (saat startup, misal load model)
+    print(f"!!! FATAL STARTUP EXCEPTION: {e_outer}")
+    # Tambahkan traceback untuk detail error startup
+    import traceback
+    print(traceback.format_exc())
+    # Kita bisa coba raise lagi agar HF tahu ada masalah serius saat startup
+    raise e_outer
 
-        # 5. Dapatkan ID Prediksi
-        # Terapkan argmax untuk menemukan indeks (ID) dengan skor tertinggi
-        # .item() mengubah tensor (misal: tensor[3]) menjadi angka (misal: 3)
-        predicted_class_id = logits.argmax(dim=-1).item()
-
-        # 6. Petakan ID ke Nama Label
-        if 0 <= predicted_class_id < len(label_map):
-            return label_map[predicted_class_id]
-        else:
-            print(f"Error: Model memprediksi ID di luar jangkauan: {predicted_class_id}")
-            return "Error: ID Prediksi Tidak Dikenal"
-
-    except Exception as e:
-        print(f"Terjadi error saat prediksi: {e}")
-        return "Error: Proses prediksi gagal"
-
-# === 6. FastAPI Endpoint ===
-
-@app.get("/")
-async def root():
-    # Endpoint sederhana untuk mengecek apakah server berjalan
-    return {"message": "Server FastAPI berjalan. Gunakan endpoint /predict untuk klasifikasi."}
-
-
-@app.post("/predict")
-async def predict(data: InputText):
-    """
-    Endpoint utama yang menerima teks dan mengembalikan prediksi.
-    """
-    print(f"Menerima teks untuk diprediksi: {data.text}")
-    
-    # Panggil fungsi prediksi model
-    hasil_prediksi = get_model_prediction(data.text)
-    
-    print(f"Hasil prediksi: {hasil_prediksi}")
-    return {"prediction": hasil_prediksi}
