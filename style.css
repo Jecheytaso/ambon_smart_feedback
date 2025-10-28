@@ -1,0 +1,153 @@
+/* ===== RESET DASAR ===== */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f4f9ff;
+  color: #333;
+}
+
+/* ===== HEADER ===== */
+.header-centered-text {
+  position: relative;
+  background-color: #5d9bda;
+  color: white;
+  padding: 1.5em 2em;
+  height: 100px;
+  border-top-right-radius: 12px;
+  border-top-left-radius: 12px;
+}
+
+.logo-kiri {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.judul-ditengah {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  font-size: 2em;
+  font-weight: bold;
+  text-align: center;
+}
+
+
+
+
+/* ===== NAVBAR ===== */
+nav {
+  background-color: #e3ecf8;
+  text-align: center;
+  padding: 1em 0;
+}
+
+nav a {
+  margin: 0 1em;
+  text-decoration: none;
+  color: #004080;
+  font-weight: bold;
+  transition: color 0.2s ease;
+}
+
+nav a:hover {
+  color: #002f5c;
+  text-decoration: underline;
+}
+
+/* ===== SECTION UMUM ===== */
+.container {
+  max-width: 900px;
+  margin: 2em auto;
+  padding: 2em;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.05);
+}
+
+/* ===== LANDING PAGE ===== */
+.btn-link {
+  display: inline-block;
+  margin-top: 1.5em;
+  padding: 12px 25px;
+  background-color: #004080;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.btn-link:hover {
+  background-color: #003060;
+}
+
+/* ===== FORM INPUT ===== */
+textarea {
+  width: 100%;
+  height: 120px;
+  padding: 1em;
+  font-size: 1em;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  resize: vertical;
+  margin-bottom: 1em;
+}
+
+button {
+  background-color: #004080;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #003060;
+}
+
+/* ===== OUTPUT KLASIFIKASI ===== */
+.output-box {
+  margin-top: 1.5em;
+  background-color: #e8f0ff;
+  border-left: 6px solid #004080;
+  padding: 1em;
+  border-radius: 6px;
+}
+
+/* ===== PROFIL ===== */
+.profile {
+  display: flex;
+  align-items: center;
+  margin-top: 2em;
+  border-top: 1px solid #ddd;
+  padding-top: 1em;
+}
+
+.profile img {
+  width: 100px;
+  height: auto;
+  border-radius: 8px;
+  margin-right: 1em;
+}
+
+.profile p {
+  margin: 0.2em 0;
+}
+
+/* ===== LIST DI BANTUAN ===== */
+ul, ol {
+  margin-left: 1.5em;
+  margin-top: 0.5em;
+}
+
+ul li, ol li {
+  margin-bottom: 0.5em;
+}
