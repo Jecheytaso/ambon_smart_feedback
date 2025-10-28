@@ -16,3 +16,5 @@ COPY . /code/
 # Beri tahu Docker port mana yang akan digunakan aplikasi Anda
 # Hugging Face Spaces biasanya menggunakan port 7860
 EXPOSE 7860
+
+CMD ["python", "-c", "print('--- Python is running inside container! ---')"]
