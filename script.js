@@ -25,8 +25,8 @@ document.getElementById("btnDeteksi").addEventListener("click", async () => {
 
     const warna = {
       "Dinas Kominfo": "#007BFF",
-      "Dinas LHP": "#28A745",
-      "Dinas PUPR": "#FFC107",
+      "Dinas Lingkungan Hidup dan Persampahan": "#28A745",
+      "Dinas Pekerjaan Umum dan Penataan Ruangan": "#FFC107",
       "Dinas Pendidikan": "#17A2B8",
       "Dinas Perhubungan": "#DC3545"
     };
