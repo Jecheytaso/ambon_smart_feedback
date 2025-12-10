@@ -40,8 +40,8 @@ try:
     # === 3. Mapping ID Label ke Nama Label ===
     label_map = [
         "Dinas Kominfo",
-        "Dinas LHP",
-        "Dinas PUPR",
+        "Dinas Lingkungan Hidup dan Persampahan",
+        "Dinas Pekerjaan Umum dan Penataan Ruangan",
         "Dinas Pendidikan",
         "Dinas Perhubungan"
     ]
