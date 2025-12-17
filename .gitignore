@@ -1,0 +1,5 @@
+.env
+config.py
+*.bin
+*.safetensors
+__pycache__/
