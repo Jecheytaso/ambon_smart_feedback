@@ -1,45 +1,38 @@
 # Ambon Smart Feedback
 
-## Deskripsi
+Ambon Smart Feedback adalah aplikasi berbasis web yang digunakan untuk mengklasifikasikan aduan masyarakat ke instansi terkait secara otomatis berdasarkan teks laporan yang diberikan oleh pengguna.
 
-Ambon Smart Feedback adalah aplikasi berbasis web yang digunakan untuk melakukan klasifikasi instansi tujuan berdasarkan teks aduan masyarakat. Aplikasi ini dirancang untuk membantu masyarakat maupun pihak terkait dalam mengidentifikasi instansi yang tepat secara otomatis menggunakan pendekatan Natural Language Processing (NLP).
+Aplikasi ini dikembangkan sebagai bagian dari tugas akhir/penelitian dan diimplementasikan menggunakan pendekatan pemrosesan bahasa alami (Natural Language Processing) dengan model IndoBERT.
 
 ## Fitur Utama
 
-* Input teks aduan masyarakat
-* Klasifikasi instansi tujuan secara otomatis
-* Tampilan antarmuka web yang sederhana dan mudah digunakan
+* Klasifikasi instansi tujuan aduan secara otomatis
+* Antarmuka web yang sederhana dan mudah digunakan
+* Mendukung input teks aduan masyarakat
+* Menampilkan hasil prediksi instansi secara langsung
+
+## Cara Menggunakan Aplikasi
+
+1. Buka halaman aplikasi Ambon Smart Feedback (https://jechey-ambon-smart-feedback-program.hf.space/ )
+2. Masukkan teks aduan masyarakat pada kolom yang tersedia
+3. Tekan tombol proses/deteksi
+4. Sistem akan menampilkan hasil klasifikasi instansi terkait
 
 ## Teknologi yang Digunakan
 
 * Python
-* HTML, CSS, dan JavaScript
-* Hugging Face Transformers
 * Hugging Face Spaces
+* Model NLP IndoBERT
+* HTML, CSS, dan JavaScript
 
-## Cara Menggunakan Aplikasi
+## Demo Aplikasi
 
-Aplikasi dapat digunakan secara langsung melalui platform Hugging Face Spaces pada tautan berikut:
+Aplikasi ini dideploy dan dapat diakses melalui platform Hugging Face Spaces.
 
-👉 [https://huggingface.co/spaces/Jechey/ambon-smart-feedback-program](https://huggingface.co/spaces/Jechey/ambon-smart-feedback-program)
+## Catatan
 
-Pengguna hanya perlu memasukkan teks aduan pada kolom yang tersedia, kemudian sistem akan menampilkan hasil klasifikasi instansi yang sesuai.
-
-## Struktur Repositori GitHub
-
-Repositori GitHub ini digunakan untuk menyimpan kode sumber aplikasi dan dokumentasi, bukan sebagai tempat penggunaan langsung aplikasi.
-
-## Catatan Penting
-
-* Model dan sistem dijalankan melalui Hugging Face Spaces.
-* Repositori GitHub ini bersifat dokumentatif dan untuk keperluan pengembangan.
-* File model dan token tidak disertakan demi keamanan.
-
-## Lisensi
-
-Proyek ini dikembangkan untuk keperluan akademik.
+Repositori GitHub ini berfungsi sebagai arsip dan dokumentasi source code. Versi aplikasi yang aktif digunakan oleh pengguna dan dijalankan secara langsung tersedia pada Hugging Face Spaces. Struktur file pada repositori ini tidak sepenuhnya mencerminkan struktur deployment aplikasi.
 
 ---
 
-**Catatan Akademik**
-Penggunaan Hugging Face Spaces sebagai media deployment bertujuan untuk memudahkan akses pengguna tanpa harus melakukan instalasi lokal serta menjaga keamanan model yang digunakan.
+Dikembangkan untuk keperluan akademik dan penelitian.
